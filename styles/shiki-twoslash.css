@@ -3,9 +3,6 @@ pre {
   background-color: white;
   color: black;
 
-  /* Give it some space to breathe */
-  padding: 12px;
-
   /* All code samples get a grey border, twoslash ones get a different color */
   border-left: 1px solid #999;
   border-bottom: 1px solid #999;
@@ -15,15 +12,25 @@ pre {
   /* Important to allow the code to move horizontally; */
   overflow-x: auto;
   position: relative;
+  border-radius: 4px;
 }
 pre.shiki {
   overflow-x: auto;
+  display: inline-flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+  width: 100%;
+  position: relative;
 }
 pre.shiki:hover .dim {
   opacity: 1;
+  transition: 0.2s;
+  filter: none;
 }
 pre.shiki div.dim {
   opacity: 0.5;
+  transition: 0.2s;
+  filter: blur(2px);
 }
 pre.shiki div.dim,
 pre.shiki div.highlight {
@@ -32,15 +39,10 @@ pre.shiki div.highlight {
 }
 pre.shiki div.highlight {
   opacity: 1;
-  background-color: #f1f8ff;
+  background-color: rgba(115, 138, 148, 0.4);
 }
 pre.shiki div.line {
   min-height: 1rem;
-}
-
-/** Don't show the language identifiers */
-pre.shiki .language-id {
-  display: none;
 }
 
 /* Visually differentiates twoslash code samples  */
@@ -72,6 +74,8 @@ pre.twoslash data-lsp:hover::before {
 
 pre .code-container {
   overflow: auto;
+  margin-top: 25px;
+  opacity: 0.9;
 }
 /* The try button */
 pre .code-container > a {
@@ -102,10 +106,11 @@ pre .code-container:hover a {
 }
 
 pre code {
-  font-size: 15px;
   font-family: "JetBrains Mono", Menlo, Monaco, Consolas, Courier New, monospace;
   white-space: pre;
   -webkit-overflow-scrolling: touch;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 pre code a {
   text-decoration: none;
@@ -236,6 +241,23 @@ data-lsp {
   }
 }
 
+.code-title {
+  position: absolute;
+  top: 10px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  left: 15px;
+}
+
+.language-id {
+  position: absolute;
+  top: 10px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+  right: 15px;
+}
+
 /** Annotations support, providing a tool for meta commentary */
 .tag-container {
   position: relative;
@@ -295,4 +317,95 @@ pre .logger.log-log {
 pre .logger.log-log svg {
   margin-left: 6px;
   margin-right: 9px;
+}
+
+code {
+  counter-reset: step;
+  counter-increment: step 0;
+}
+
+code .line::before {
+  content: counter(step);
+  counter-increment: step;
+  width: 1rem;
+  margin-right: 1.5rem;
+  display: inline-block;
+  text-align: right;
+  color: rgba(115, 138, 148, 0.4);
+  margin-left: 10px;
+  line-height: 25px;
+}
+
+/*  */
+code,
+kbd,
+pre,
+samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    Liberation Mono, Courier New, monospace;
+}
+
+code {
+  padding: 1rem;
+}
+
+code {
+  display: block;
+  min-height: 100%;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+code .line-number,
+code .summary-caret {
+  margin-right: 1rem;
+}
+
+.has-focus-lines .line:not(.line-focus) {
+  filter: blur(0.095rem);
+  opacity: 0.4;
+  transition: filter 0.35s, opacity 0.35s;
+}
+
+.has-focus-lines:hover .line:not(.line-focus) {
+  filter: blur(0);
+  opacity: 1;
+}
+
+summary:focus {
+  outline: none;
+}
+
+details > summary::-webkit-details-marker,
+details > summary::marker {
+  display: none;
+}
+
+details .summary-caret:after {
+  pointer-events: none;
+}
+
+.summary-caret-empty:after,
+details .summary-caret-end:after,
+details .summary-caret-middle:after {
+  content: " ";
+}
+
+details[open] .summary-caret-start:after {
+  content: "-";
+}
+
+details:not([open]) .summary-caret-start:after {
+  content: "+";
+}
+
+details[open] .summary-hide-when-open {
+  display: none;
+}
+
+details:not([open]) .summary-hide-when-open {
+  display: inline;
 }

@@ -14,7 +14,7 @@ const IndexPage: NextPage<IProps> = ({ html }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const githubResponse = await fetch(
-    "https://raw.githubusercontent.com/ghoshnirmalya/mdx-transformer/main/content/sample.md?token=ABQYPU65EOKZS7E553SUZRDBGRWN2"
+    "https://raw.githubusercontent.com/shikijs/twoslash/main/examples/docusaurus/docs/intro.md"
   );
   const githubContent = await githubResponse.text();
 

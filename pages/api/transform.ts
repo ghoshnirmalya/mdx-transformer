@@ -17,7 +17,7 @@ export default async function handler(
 
       try {
         await remarkShikiTwoslash({
-          theme: "github-dark",
+          theme: "dark-plus",
         })(markdownAST);
 
         const hast = toHast(markdownAST, {

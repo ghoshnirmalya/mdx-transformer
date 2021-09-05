@@ -4,6 +4,7 @@ import type { HastNode } from "mdast-util-to-hast/lib";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { remark } from "remark";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
+import shiki from "shiki";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,11 +13,14 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       const { source } = req.body;
-
       const markdownAST = remark().parse(source);
 
+      console.log(shiki);
+
       try {
-        await remarkShikiTwoslash()(markdownAST);
+        await remarkShikiTwoslash({
+          theme: "dark-plus",
+        })(markdownAST);
 
         const hast = toHast(markdownAST, {
           allowDangerousHtml: true,

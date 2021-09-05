@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   );
   const githubContent = await githubResponse.text();
 
-  const response = await fetch("http://localhost:3000/api/transform", {
+  const response = await fetch(`${process.env.API_ENDPOINT}/api/transform`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

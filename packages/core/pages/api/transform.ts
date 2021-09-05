@@ -16,9 +16,7 @@ export default async function handler(
       const markdownAST = remark().parse(source);
 
       try {
-        await remarkShikiTwoslash({
-          theme: "dark-plus",
-        })(markdownAST);
+        await remarkShikiTwoslash()(markdownAST);
 
         const hast = toHast(markdownAST, {
           allowDangerousHtml: true,

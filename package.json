@@ -5,6 +5,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "build": "lerna run build",
+    "start": "lerna run start"
+  },
   "devDependencies": {
     "@types/react": "17.0.20",
     "eslint": "7.32.0",

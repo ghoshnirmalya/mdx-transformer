@@ -1,6 +1,8 @@
-import matter from "gray-matter";
+import { toHtml } from "hast-util-to-html";
+import { toHast } from "mdast-util-to-hast";
+import type { HastNode } from "mdast-util-to-hast/lib";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { serialize } from "next-mdx-remote/serialize";
+import { remark } from "remark";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 
 export default async function handler(
@@ -10,19 +12,23 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       const { source } = req.body;
-      const { content, data } = matter(source);
-      const mdxSource = await serialize(content, {
-        scope: data,
-        mdxOptions: {
-          remarkPlugins: [[remarkShikiTwoslash, { theme: "dark-plus" }]],
-          rehypePlugins: [],
-          compilers: [],
-        },
-      });
 
-      const a = { source: mdxSource, frontMatter: data };
+      const markdownAST = remark().parse(source);
 
-      res.status(200).json({ source: mdxSource, frontMatter: data });
+      try {
+        await remarkShikiTwoslash({})(markdownAST);
+
+        const hast = toHast(markdownAST, {
+          allowDangerousHtml: true,
+        }) as HastNode;
+        const html = toHtml(hast, {
+          allowDangerousHtml: true,
+        });
+
+        res.status(200).json({ html: html });
+      } catch (error) {
+        res.status(422).json({ error });
+      }
 
       break;
 

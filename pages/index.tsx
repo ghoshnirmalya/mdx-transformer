@@ -1,22 +1,15 @@
 import { GetServerSideProps, NextPage } from "next";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 
 interface IProps {
-  data: {
-    source: MDXRemoteSerializeResult<Record<string, unknown>>;
-    frontMatter: {
-      [key: string]: any;
-    };
-  };
+  html: string;
 }
 
-const IndexPage: NextPage<IProps> = ({ data }) => {
-  return (
-    <>
-      <h1>{data.frontMatter.title}</h1>
-      <MDXRemote {...data.source} />
-    </>
-  );
+const IndexPage: NextPage<IProps> = ({ html }) => {
+  const createMarkup = () => {
+    return { __html: html };
+  };
+
+  return <div dangerouslySetInnerHTML={createMarkup()} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -24,8 +17,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     "https://raw.githubusercontent.com/shikijs/twoslash/main/packages/remark-shiki-twoslash/test/fixtures/highlight.md"
   );
   const githubContent = await githubResponse.text();
-
-  console.log(githubContent);
 
   const response = await fetch("http://localhost:3000/api/transform", {
     method: "POST",
@@ -36,11 +27,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
       source: githubContent,
     }),
   });
-  const data = await response.json();
+  const { html } = await response.json();
 
   return {
     props: {
-      data,
+      html,
     },
   };
 };

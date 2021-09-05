@@ -16,7 +16,9 @@ export default async function handler(
       const markdownAST = remark().parse(source);
 
       try {
-        await remarkShikiTwoslash({})(markdownAST);
+        await remarkShikiTwoslash({
+          theme: "github-dark",
+        })(markdownAST);
 
         const hast = toHast(markdownAST, {
           allowDangerousHtml: true,
@@ -25,8 +27,10 @@ export default async function handler(
           allowDangerousHtml: true,
         });
 
-        res.status(200).json({ html: html });
+        res.status(200).json({ html });
       } catch (error) {
+        console.log(error);
+
         res.status(422).json({ error });
       }
 

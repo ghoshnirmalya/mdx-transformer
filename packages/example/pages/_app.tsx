@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import "../styles/shiki-twoslash.css";
+import "../styles/code.css";
 
 const NextApp = ({ Component, pageProps }: AppProps) => {
   return <Component {...pageProps} />;

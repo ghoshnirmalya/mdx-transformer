@@ -1,1 +1,1 @@
-declare module "remark-torchlight";
+declare module "gatsby-remark-vscode";

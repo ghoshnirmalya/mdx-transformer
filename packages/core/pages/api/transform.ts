@@ -1,10 +1,11 @@
-import { toHtml } from "hast-util-to-html";
-import { toHast } from "mdast-util-to-hast";
-import type { HastNode } from "mdast-util-to-hast/lib";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { remark } from "remark";
-import remarkShikiTwoslash from "remark-shiki-twoslash";
-import shiki from "shiki";
+import remarkVscode from "gatsby-remark-vscode";
+import matter from "gray-matter";
+import rehypeRaw from "rehype-raw";
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkToRehype from "remark-rehype";
+import { unified } from "unified";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,27 +13,34 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "POST":
-      const { source } = req.body;
-      const markdownAST = remark().parse(source);
+      const { source, config } = req.body;
+      const { content, data } = matter(source);
 
-      console.log(shiki);
-
-      try {
-        await remarkShikiTwoslash({
-          theme: "dark-plus",
-        })(markdownAST);
-
-        const hast = toHast(markdownAST, {
+      const processor = unified()
+        .use(remarkParse)
+        .use(remarkVscode.remarkPlugin, {
+          // theme: "Nord",
+          // extensions: ["nord-visual-studio-code"],
+          // theme: "poimandres",
+          // extensions: ["pmndrs"],
+          theme: "Shades of Purple",
+          extensions: ["shades-of-purple"],
+        })
+        .use(remarkToRehype, { allowDangerousHtml: true })
+        .use(rehypeRaw)
+        .use(rehypeStringify, {
           allowDangerousHtml: true,
-        }) as HastNode;
-        const html = toHtml(hast, {
-          allowDangerousHtml: true,
+          closeSelfClosing: true,
         });
 
-        res.status(200).json({ html });
-      } catch (error) {
-        console.log(error);
+      try {
+        const markdown = await processor.process(content);
 
+        res.status(200).json({
+          content: markdown.value,
+          frontMatter: data,
+        });
+      } catch (error) {
         res.status(422).json({ error });
       }
 

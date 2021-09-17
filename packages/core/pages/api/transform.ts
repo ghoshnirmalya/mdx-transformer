@@ -41,6 +41,8 @@ export default async function handler(
           frontMatter: data,
         });
       } catch (error) {
+        console.log(error);
+
         res.status(422).json({ error });
       }
 

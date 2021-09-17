@@ -19,12 +19,13 @@ export default async function handler(
       const processor = unified()
         .use(remarkParse)
         .use(remarkVscode.remarkPlugin, {
+          theme: "Default Light+",
           // theme: "Nord",
           // extensions: ["nord-visual-studio-code"],
           // theme: "poimandres",
           // extensions: ["pmndrs"],
-          theme: "Shades of Purple",
-          extensions: ["shades-of-purple"],
+          // theme: "Shades of Purple",
+          // extensions: ["shades-of-purple"],
         })
         .use(remarkToRehype, { allowDangerousHtml: true })
         .use(rehypeRaw)
